@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="jquery-chain-select.js"></script>
+    <style>
+        select {
+            width: 180px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>demo1</h2>
+<!--显示级联选择框-->
+<span id="js-chain-demo1"></span>
+
+<script>
+
+    $(function () {
+        $("#js-chain-demo1").chainSelect({
+            //optionData参数: 设置ajax获取下拉选项数据的url
+            optionData: "jquery-chain-select.php",
+            items: [
+                //select的name, 默认选中项的value, 提示文本
+                {name: 'province', selected: "13", prompt: '--选择省--'},
+                {name: 'city', selected: "41", prompt: '--选择市--'},
+                {name: 'county', selected: "52", prompt: '--选择区县--'},
+            ]
+        })
+    });
+</script>
+
+<br/>
+
+<h2>demo2</h2>
+<!--显示级联选择框-->
+<span id="js-chain-demo2"></span>
+<script>
+    $(function () {
+        $("#js-chain-demo2").chainSelect({
+            //optionData参数: 可以是一个回调函数，根据pid返回对应下拉选项数据
+            optionData: function (pid) {
+                var data = [];
+                data[0] = [{"id": "12", "name": "北京"}, {"id": "13", "name": "广东省"}]; //pid为0时，返回第一个下拉框数据
+                data[12] = [{"id": "22", "name": "北京市"}];
+                data[22] = [{"id": "30", "name": "朝阳区"}, {"id": "31", "name": "昌平区"}];
+                data[13] = [{"id": "41", "name": "广州市"}, {"id": "42", "name": "深圳市"}];
+                data[41] = [{"id": "52", "name": "番禺区"}, {"id": "53", "name": "天河区"}];
+                data[42] = [{"id": "54", "name": "福田区"}, {"id": "55", "name": "罗湖区"}];
+
+                return pid in data ? data[pid] : [];
+            },
+            items: [
+                {name: 'province', selected: "13", prompt: '--选择省--'},
+                {name: 'city', selected: "41", prompt: '--选择市--'},
+                {name: 'county', selected: "52", prompt: '--选择区县--'},
+            ],
+
+            //select模板
+            tplSelect: function (name) {
+                return '<select name="' + name + '"></select>';
+            },
+            //option模板
+            tplOption: function (display, value) {
+                return '<option value="' + value + '">' + display + '</option>';
+            },
+            //激活指定value的下拉项，成功返回true
+            activeOption: function (select, value) {
+                var option = $("option[value='" + value + "']", select);
+                if (option.length == 1) {
+                    option.get(0).selected = true;
+                    return true;
+                }
+                return false;
+            }
+        })
+    })
+</script>
+
+<br/>
+
+<h2>demo3 配合jquery ui使用</h2>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+<span id="js-chain-demo3"></span>
+
+<script>
+
+    $(function () {
+        $("#js-chain-demo3").chainSelect({
+            //optionData参数: 设置ajax获取下拉选项数据的url
+            optionData: "jquery-chain-select.php",
+            items: [
+                {name: 'province', selected: "13", prompt: '--选择省--'},
+                {name: 'city', selected: "41", prompt: '--选择市--'},
+                {name: 'county', selected: "52", prompt: '--选择区县--'},
+            ],
+            //select模板
+            tplSelect: function (name) {
+                return '<select name="' + name + '"></select>';
+            },
+            //option模板
+            tplOption: function (display, value) {
+                return '<option value="' + value + '">' + display + '</option>';
+            }
+        })
+
+        var obj1 = $("#js-chain-demo3 select[name='province']");
+        var obj2 = $("#js-chain-demo3 select[name='city']");
+        var obj3 = $("#js-chain-demo3 select[name='county']");
+        //http://tpap.shopmodule.jaeapp.com/jquery/jqueryui/selectmenu.html
+
+        obj1.selectmenu({
+            change: function (event, ui) {
+                $($(ui.item.element).parent()).trigger("change");
+                obj2.selectmenu('refresh');//ui重绘
+                obj3.selectmenu('refresh');//ui重绘
+            }
+        });
+
+        obj2.selectmenu({
+            change: function (event, ui) {
+                console.log(ui);
+                $($(ui.item.element).parent()).trigger("change");
+                obj3.selectmenu('refresh');//ui重绘
+            }
+        });
+
+        obj3.selectmenu();
+
+    });
+</script>
+
+</body>
+</html>
