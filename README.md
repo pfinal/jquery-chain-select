@@ -15,7 +15,7 @@
 
             //设置ajax获取下拉选项数据的url
             //接收pid参数，根据pid参数(父级id)返回json数据
-            //服务端端回数据示例： [{"id":"12","name":"北京"},{"id":"13","name":"广东省"}]
+            //服务端返回数据示例： [{"id":"12","name":"北京"},{"id":"13","name":"广东省"}]
 
             optionData: "jquery-chain-select.php", 
             items: [
