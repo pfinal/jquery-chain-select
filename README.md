@@ -12,7 +12,12 @@
 
     $(function () {
         $("#js-chain-demo1").chainSelect({
-            optionData: "jquery-chain-select.php", //设置ajax获取下拉选项数据的url
+
+            //设置ajax获取下拉选项数据的url
+            //接收pid参数，根据pid参数(父级id)返回json数据
+            //服务端端回数据示例： [{"id":"12","name":"北京"},{"id":"13","name":"广东省"}]
+
+            optionData: "jquery-chain-select.php", 
             items: [
                 {name: 'province', selected: "13", prompt: '--选择省--'},
                 {name: 'city', selected: "41", prompt: '--选择市--'},
