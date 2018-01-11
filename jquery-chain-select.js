@@ -23,9 +23,18 @@
                 }
 
                 selectObjects[i] = $(makeSelect(selectConfig[i].name));
-                selectObjects[i].attr("data-index", i);
+
+                if ($(selectObjects[i]).is('select')) {
+                    selectObjects[i].attr("data-index", i);
+                } else {
+                    selectObjects[i].find('select').attr("data-index", i);
+                }
 
                 $(chain).append(selectObjects[i]);
+
+                if (!$(selectObjects[i]).is('select')) {
+                    selectObjects[i] = $(selectObjects[i]).find('select');
+                }
 
                 //加载默认的提示项prompt
                 fillSelect(selectObjects[i], [], selectConfig[i].prompt);
@@ -119,7 +128,9 @@
                 for (var i = 0; i < data.length; i++) {
                     str += makeOption(data[i].name, data[i].id);
                 }
+
                 $(select).html(str);
+
                 if (data.length == 1) {
                     activeOptionByValue(select, data[0].id);
                 }
